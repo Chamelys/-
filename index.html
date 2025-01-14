@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测测“我”的前世今生和未来</title>
+    <script src="https://cdn.jsdelivr.net/npm/filepond@4.30.4/dist/filepond.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/filepond@4.30.4/dist/filepond.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8e9ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #000000;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #000000;
+            margin-bottom: 20px;
+        }
+        input[type="date"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .upload-box {
+            border: 2px dashed #6a0dad;
+            padding: 30px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            position: relative;
+        }
+        .upload-box:hover {
+            background-color: #f0e0ff;
+        }
+        .upload-box input[type="file"] {
+            display: none;
+        }
+        .upload-box p {
+            margin: 0;
+            color: #000000;
+        }
+        button {
+            background-color: #6a0dad;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #570b82;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>测测“我”的前世今生和未来</h1>
+        <p>探索你的灵魂轨迹，发现不一样的自己</p>
+        <div style="margin-bottom: 20px; text-align: left;">
+            <label for="birthdate" style="color: #000000; font-weight: bold; display: block; margin-bottom: 10px;">请选择出生年月日：</label>
+            <input type="datetime-local" id="birthdate" name="birthdate" value="2025-01-05T00:00" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box;">
+        </div>
+
+        <div style="margin-bottom: 20px; text-align: left;">
+            <span style="color: #000000; font-weight: bold; display: block; margin-bottom: 10px;">性别:</span>
+            <label style="margin-right: 20px;">
+            <input type="radio" name="gender" value="male" style="margin-right: 5px;">男
+            </label>
+            <label>
+            <input type="radio" name="gender" value="female" style="margin-right: 5px;" checked>女
+            </label>
+        </div>
+        <div class="upload-box" onclick="document.getElementById('photoUpload').click();">
+            <input type="file" id="photoUpload" name="photoUpload" accept=".png, .jpg, .jpeg" style="display: none;" required onchange="handleFileSelect(event)">
+            <p id="uploadStatus" style="display: none; color: green;">上传成功</p>
+        <div id="clickStatus"><p>点击上传您的个人照或将照片拖放到这里</p>
+            支持 PNG, JPG, JPEG 格式
+        </div>
+        </div>
+      
+        <button type="button" onclick="startExploration()">开始探索</button>
+  
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const uploadStatus = document.getElementById('uploadStatus');
+            const clickStatus = document.getElementById('clickStatus');
+            clickStatus.style.display = 'none';
+            uploadStatus.style.display = 'block';
+            uploadStatus.textContent = '上传成功';           
+        }
+
+        function startExploration() {
+            const birthdate = document.getElementById('birthdate').value;
+            // const photo = document.getElementById('photoUpload').files[0];
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+
+            // 这里可以添加将信息发送到服务器的代码
+            console.log('出生日期:', birthdate);
+            // if (photo) {
+            //     console.log('照片已选择:', photo.name);
+            // }
+            const photo = "https://p26-bot-workflow-sign.byteimg.com/tos-cn-i-mdko3gqilj/8162749245ae4e52b5d0a9394d78d9ff.jpg~tplv-mdko3gqilj-image.image?rk3s=81d4c505&x-expires=1767452386&x-signature=dKfRVTyaD5rOOpFAJ3WZPtK%2FeEs%3D&x-wf-file_name=%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250107213733.jpg"
+            // 可以在这里添加更多的逻辑，比如表单验证、发送数据到服务器等
+            // 你的工作流ID，需要替换成你自己的工作流ID
+            const workflowId = "7457584157926260776";
+
+            // 你的访问令牌，需要替换成你自己的访问令牌
+            const accessToken = "pat_muvpXbvyElzboVs7OdfOAFJWjtE8mMef9cWoFPmqDWYiOLh8PEGtbGNjxA1ljbcN";
+
+            // 工作流的输入数据，需要根据你的工作流定义来设置
+            const inputData = {
+                "input": "出生日期："+birthdate+"，性别："+gender,
+                "pic": photo
+            };
+            console.log('数据', inputData);
+            function runWorkflow() {
+                // 构建请求的URL
+                const url = `https://api.coze.cn/v1/workflow/run`;
+
+                // 构建请求的headers
+                const headers = {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                };
+
+                // 构建请求的body
+                const body = JSON.stringify({
+                    "workflow_id": workflowId,
+                    "parameters": JSON.stringify({inputData})
+                });
+
+                // 发送请求
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: body
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    // 这里可以处理返回的数据，例如显示debug_url
+                    if (data.debug_url) {
+                        // window.open(data.debug_url, '_blank');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+ 
+            function createGPT() {
+                const msg = [{
+                "type": "text",
+                "text": "出生日期：2010年03月10日，性别：女", 
+                "type": "image",
+                "file_url": photo
+                }];
+
+                // 构建请求的URL
+                const url = 'https://api.coze.cn/v1/conversation/create';
+
+                // 构建请求的headers
+                const headers = {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                };
+
+                // 构建请求的body
+                const body = {
+                    messages: [{
+                        "role": "user",
+                        "content": JSON.stringify({msg}),
+                        "content_type": "object_string"
+                    }]
+                };
+
+                // 发送请求
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: body
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    re = openGPT(data);
+                    console.log('re:', re);
+                    // 这里可以处理返回的数据，例如显示debug_url
+                    if (data.debug_url) {
+                        // window.open(data.debug_url, '_blank');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function openGPT(convData) {
+                // 2. Start chat with conversation ID
+                fetch(`https://api.coze.cn/v3/chat?conversation_id=${convData.data.id}`, {
+                    method: 'POST',
+                    headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                    bot_id: workflowId,
+                    user_id: 'default_user',
+                    stream: false,
+                    auto_save_history: true
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("response.json()");
+                        return response.json();
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    // 这里可以处理返回的数据，例如显示debug_url
+                    if (data.debug_url) {
+                        // window.open(data.debug_url, '_blank');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+            // 调用工作流
+            // runWorkflow();
+            createGPT();
+
+        }
+ 
+    </script>
+</body>
+</html>
